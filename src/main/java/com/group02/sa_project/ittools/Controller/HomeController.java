@@ -10,20 +10,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.group02.sa_project.ittools.Model.Category;
 import com.group02.sa_project.ittools.Model.Tool;
-import com.group02.sa_project.ittools.Service.CategoryService;
+import com.group02.sa_project.ittools.Repository.CategoryRepository;
 import com.group02.sa_project.ittools.Service.ToolService;
 
 @Controller
 @RequestMapping("")
 public class HomeController {
     @Autowired
-    private CategoryService categoriesService;
-    @Autowired
     private ToolService toolService;
+
+    private final CategoryRepository categoryRepository;
+
+    public HomeController(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
 
     @GetMapping("")
     public String show(Model model) {
-        List<Category> allCategories = categoriesService.getAllCategories();
+        List<Category> allCategories = categoryRepository.findAllWithTools();
         List<Tool> allTools = toolService.getAllTools();
         model.addAttribute("categories", allCategories);
         model.addAttribute("tools", allTools);
