@@ -27,7 +27,9 @@
               <!-- Tools trong danh mục -->
               <ul id="tools-{{categoryId}}" class="mt-2 ml-5 space-y-1">
               {{#tools}}
-                  <li class="text-sm text-gray-400 hover:text-white">{{toolName}}</li>
+                  <li >
+                    <a href={{pathTool}} class="text-sm text-gray-400 hover:text-white">{{toolName}}</a>
+                  </li>
               {{/tools}}
               </ul>
           </li>
