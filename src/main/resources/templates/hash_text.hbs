@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hash Text Tool</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white">
+  <div class="flex h-screen">
+<!-- Sidebar -->
+      <aside class="w-64 h-screen bg-gray-800 p-5">
+        <a href="/">
+          <h1 class="text-2xl font-bold text-green-400">IT - TOOLS</h1>
+          <p class="text-sm text-gray-400">Handy tools for developers</p>
+        </a>
+      <h1 class="text-xl text-white mt-4 mb-2">Danh sách danh mục</h1>
+
+      <ul class="text-gray-300">
+          {{#categories}}
+          <li class="mb-3">
+              <!-- Danh mục -->
+              <div class="flex justify-between items-center cursor-pointer" onclick="toggleTools({{categoryId}})">
+              <span class="text-lg font-semibold">{{categoryName}}</span>
+              </div>
+
+              <!-- Tools trong danh mục -->
+              <ul id="tools-{{categoryId}}" class="mt-2 ml-5 space-y-1">
+              {{#tools}}
+                  <li class="text-sm text-gray-400 hover:text-white">{{toolName}}</li>
+              {{/tools}}
+              </ul>
+          </li>
+          {{/categories}}
+      </ul>
+      </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-10 max-h-screen overflow-y-auto">
+      <h2 class="text-3xl font-semibold mb-5">Hash text</h2>
+      <p class="text-gray-400 mb-8">Hash a text string using the function you need: MD5, SHA1, SHA256, SHA512...</p>
+
+      <!-- Input Section -->
+      <div class="mb-6">
+        <label class="block mb-2 text-sm font-medium">Your text to hash:</label>
+        <textarea id="inputText" class="w-full p-4 bg-gray-700 rounded-lg text-white outline-none" placeholder="Your string to hash..."></textarea>
+      </div>
+
+        <div class="mb-4">
+        <label for="encodingType" class="block text-sm font-medium mb-2">Choose Encoding Type:</label>
+        <select id="encodingType" class="w-full p-2 bg-gray-700 rounded-lg">
+            <option value="hex">Hexadecimal</option>
+            <option value="base64">Base64</option>
+            <option value="binary">Binary</option>
+        </select>
+        </div>
+
+      <!-- Hash Result -->
+      <h3 class="text-lg font-medium mb-3">Digest encoding</h3>
+        <div class="space-y-3">
+            <div class="flex justify-between items-center bg-gray-800 p-3 rounded-lg">
+                <span>MD5</span>
+                <span id="md5Hash" class="text-gray-400 truncate max-w-[300px]">...</span>
+                <button onclick="copyHash('md5Hash')" class="text-green-400 text-sm hover:underline">Copy</button>
+            </div>
+            <div class="flex justify-between items-center bg-gray-800 p-3 rounded-lg">
+                <span>SHA1</span>
+                <span id="sha1Hash" class="text-gray-400 truncate max-w-[300px]">...</span>
+                <button onclick="copyHash('sha1Hash')" class="text-green-400 text-sm hover:underline">Copy</button>
+            </div>
+            <div class="flex justify-between items-center bg-gray-800 p-3 rounded-lg">
+                <span>SHA256</span>
+                <span id="sha256Hash" class="text-gray-400 truncate max-w-[300px]">...</span>
+                <button onclick="copyHash('sha256Hash')" class="text-green-400 text-sm hover:underline">Copy</button>
+            </div>
+            <div class="flex justify-between items-center bg-gray-800 p-3 rounded-lg">
+                <span>SHA512</span>
+                <span id="sha512Hash" class="text-gray-400 truncate max-w-[300px]">...</span>
+                <button onclick="copyHash('sha512Hash')" class="text-green-400 text-sm hover:underline">Copy</button>
+            </div>
+            <div class="flex justify-between items-center bg-gray-800 p-3 rounded-lg">
+                <span>SHA224</span>
+                <span id="sha224Hash" class="text-gray-400 truncate max-w-[300px]">...</span>
+                <button onclick="copyHash('sha224Hash')" class="text-green-400 text-sm hover:underline">Copy</button>
+            </div>
+                        <div class="flex justify-between items-center bg-gray-800 p-3 rounded-lg">
+                <span>SHA384</span>
+                <span id="sha384Hash" class="text-gray-400 truncate max-w-[300px]">...</span>
+                <button onclick="copyHash('sha384Hash')" class="text-green-400 text-sm hover:underline">Copy</button>
+            </div>
+            <div class="flex justify-between items-center bg-gray-800 p-3 rounded-lg">
+                <span>SHA3-256</span>
+                <span id="sh3-256Hash" class="text-gray-400 truncate max-w-[300px]">...</span>
+                <button onclick="copyHash('sh3-256Hash')" class="text-green-400 text-sm hover:underline">Copy</button>
+            </div>
+            <div class="flex justify-between items-center bg-gray-800 p-3 rounded-lg">
+                <span>SHA3-224</span>
+                <span id="sh3-224Hash" class="text-gray-400 truncate max-w-[300px]">...</span>
+                <button onclick="copyHash('sh3-224Hash')" class="text-green-400 text-sm hover:underline">Copy</button>
+            </div>
+        </div>
+    </main>
+  </div>
+</body>
+<script>
+const inputText = document.getElementById('inputText');
+const encodingType = document.getElementById('encodingType');
+
+encodingType.addEventListener('change', async () => {
+    const text = inputText.value;
+    const encoding = encodingType.value;
+
+    document.getElementById('md5Hash').textContent = await hashText(text, encoding, 'MD5');
+    document.getElementById('sha1Hash').textContent = await hashText(text, encoding, 'SHA-1');
+    document.getElementById('sha256Hash').textContent = await hashText(text, encoding, 'SHA-256');
+    document.getElementById('sha512Hash').textContent = await hashText(text, encoding, 'SHA-512');
+    document.getElementById('sha224Hash').textContent = await hashText(text, encoding, 'SHA-224');
+    document.getElementById('sha384Hash').textContent = await hashText(text, encoding, 'SHA-384');
+    document.getElementById('sh3-256Hash').textContent = await hashText(text, encoding, 'SHA3-256');
+    document.getElementById('sh3-224Hash').textContent = await hashText(text, encoding, 'SHA3-224');
+});
+
+inputText.addEventListener('input', async () => {
+    const text = inputText.value;
+    const encoding = encodingType.value;
+
+    document.getElementById('md5Hash').textContent = await hashText(text, encoding, 'MD5');
+    document.getElementById('sha1Hash').textContent = await hashText(text, encoding, 'SHA-1');
+    document.getElementById('sha256Hash').textContent = await hashText(text, encoding, 'SHA-256');
+    document.getElementById('sha512Hash').textContent = await hashText(text, encoding, 'SHA-512');
+    document.getElementById('sha224Hash').textContent = await hashText(text, encoding, 'SHA-224');
+    document.getElementById('sha384Hash').textContent = await hashText(text, encoding, 'SHA-384');
+    document.getElementById('sh3-256Hash').textContent = await hashText(text, encoding, 'SHA3-256');
+    document.getElementById('sh3-224Hash').textContent = await hashText(text, encoding, 'SHA3-224');
+});
+
+async function hashText(text, encoding, algorithm) {
+  const response = await fetch(`/api/hash?text=${encodeURIComponent(text)}&encoding=${encoding}&algorithm=${algorithm}`, {
+    method: 'POST'
+  });
+
+  const data = await response.json();
+  return data.hash;
+}
+
+function copyHash(elementId) {
+  const text = document.getElementById(elementId).textContent;
+  navigator.clipboard.writeText(text);
+}
+
+</script>
+</html>
