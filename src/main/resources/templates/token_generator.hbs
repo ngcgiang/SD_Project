@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hash Text Tool</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white">
+  <div class="flex h-screen">
+<!-- Sidebar -->
+      <aside class="w-64 h-screen bg-gray-800 p-5">
+        <a href="/">
+          <h1 class="text-2xl font-bold text-green-400">IT - TOOLS</h1>
+          <p class="text-sm text-gray-400">Handy tools for developers</p>
+        </a>
+      <h1 class="text-xl text-white mt-4 mb-2">Danh sách danh mục</h1>
+
+      <ul class="text-gray-300">
+          {{#categories}}
+          <li class="mb-3">
+              <!-- Danh mục -->
+              <div class="flex justify-between items-center cursor-pointer" onclick="toggleTools({{categoryId}})">
+              <span class="text-lg font-semibold">{{categoryName}}</span>
+              </div>
+
+              <!-- Tools trong danh mục -->
+              <ul id="tools-{{categoryId}}" class="mt-2 ml-5 space-y-1">
+              {{#tools}}
+                  <li >
+                    <a href={{pathTool}} class="text-sm text-gray-400 hover:text-white">{{toolName}}</a>
+                  </li>
+              {{/tools}}
+              </ul>
+          </li>
+          {{/categories}}
+      </ul>
+      </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-10 max-h-screen overflow-y-auto">
+      <div class="bg-gray-900 text-white p-6 rounded-lg w-full max-w-2xl mx-auto">
+        <h2 class="text-3xl font-semibold mb-4">Token generator</h2>
+        <p class="text-gray-400 mb-6">Generate random string with the chars you want, uppercase or lowercase letters, numbers and/or symbols.</p>
+
+        <div class="bg-gray-800 p-5 rounded-lg">
+          <div class="flex items-center justify-between mb-4">
+            <label class="flex items-center space-x-2">
+              <span>Uppercase (ABC...)</span>
+              <input type="checkbox" class="toggle" checked>
+            </label>
+            <label class="flex items-center space-x-2">
+              <span>Lowercase (abc...)</span>
+              <input type="checkbox" class="toggle" checked>
+            </label>
+            <label class="flex items-center space-x-2">
+              <span>Numbers (123...)</span>
+              <input type="checkbox" class="toggle" checked>
+            </label>
+            <label class="flex items-center space-x-2">
+              <span>Symbols (!-...)</span>
+              <input type="checkbox" class="toggle" checked>
+            </label>
+          </div>
+
+          <div class="mb-4">
+            <label class="block text-sm mb-2">Length (172)</label>
+            <input type="range" min="1" max="200" value="172" class="w-full">
+          </div>
+
+          <textarea class="w-full bg-gray-700 p-3 rounded-lg text-white mb-4" rows="4" readonly>S/IgWkQm"OQjW:Dv:QlA||R@/opO2=yMD4{Da},bFJ3A#yfMcBPzX9Sa;EfkmWSTp06Y\ffhuHHr@[FYV,e*C;8/IP2iPz,CY-}}xA(u;*uCH:wjoq'exPYP:dd.FpHLD#"BcKlJ9Te2*RD-=Z:QQJc)a5YP}};Li5M9T'CKOw</textarea>
+
+          <div class="flex space-x-4">
+            <button class="bg-gray-700 px-4 py-2 rounded-lg text-white hover:bg-gray-600">Copy</button>
+            <button class="bg-gray-700 px-4 py-2 rounded-lg text-white hover:bg-gray-600">Refresh</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</body>
+<script>
+
+
+</script>
+</html>
