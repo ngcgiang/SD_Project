@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hash Text Tool</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white">
+  <div class="flex h-screen">
+<!-- Sidebar -->
+      <aside class="w-64 h-screen bg-gray-800 p-5">
+        <a href="/">
+          <h1 class="text-2xl font-bold text-green-400">IT - TOOLS</h1>
+          <p class="text-sm text-gray-400">Handy tools for developers</p>
+        </a>
+      <h1 class="text-xl text-white mt-4 mb-2">Danh sách danh mục</h1>
+
+      <ul class="text-gray-300">
+          {{#categories}}
+          <li class="mb-3">
+              <!-- Danh mục -->
+              <div class="flex justify-between items-center cursor-pointer" onclick="toggleTools({{categoryId}})">
+              <span class="text-lg font-semibold">{{categoryName}}</span>
+              </div>
+
+              <!-- Tools trong danh mục -->
+              <ul id="tools-{{categoryId}}" class="mt-2 ml-5 space-y-1">
+              {{#tools}}
+                  <li >
+                    <a href={{pathTool}} class="text-sm text-gray-400 hover:text-white">{{toolName}}</a>
+                  </li>
+              {{/tools}}
+              </ul>
+          </li>
+          {{/categories}}
+      </ul>
+      </aside>
+   
+    <!-- Main Content -->
+    <main class="flex-1 p-10 max-h-screen overflow-y-auto">
+      <div class="converter-container p-6 bg-gray-900 text-white rounded-lg w-full max-w-xl mx-auto">
+        <h1 class="text-2xl font-semibold mb-2">Integer base converter</h1>
+        <p class="text-gray-400 mb-6">Convert a number between different bases (binary, decimal, hexadecimal, base64,...)</p>
+
+        <div class="mb-4">
+          <label for="input-number" class="block mb-2">Input number</label>
+          <input type="text" id="input-number" value="42" oninput="validateInput()" placeholder="Number..." class="w-full bg-gray-700 p-2 rounded-lg text-white">
+          <p id="error-msg" class="pt-4 text-red-500 hidden">Invalid input for the selected base.</p>
+        </div>
+
+        <div class="mb-6">
+          <label for="input-base" class="block mb-2">Input base</label>
+          <input type="number" id="input-base" oninput="validateInput()" value="10" placeholder="Base..." class="w-full bg-gray-700 p-2 rounded-lg text-white">
+        </div>
+
+        <div class="space-y-4">
+          <div class="flex items-center gap-4">
+            <span>Binary (2)</span>
+            <span id="bin" class="bg-gray-700 p-2 rounded-lg text-white w-full">...</span>
+            <button class="text-green-400" onclick="copyToClipboard('bin')">Copy</button>
+          </div>
+          <div class="flex items-center gap-4">
+            <span>Octal (8)</span>
+            <span id="oct" class="bg-gray-700 p-2 rounded-lg text-white w-full">...</span>
+            <button class="text-green-400" onclick="copyToClipboard('oct')">Copy</button>
+          </div>
+          <div class="flex items-center gap-4">
+            <span>Decimal (10)</span>
+            <span id="dec" class="bg-gray-700 p-2 rounded-lg text-white w-full">...</span>
+            <button class="text-green-400" onclick="copyToClipboard('dec')">Copy</button>
+          </div>
+          <div class="flex items-center gap-4">
+            <span>Hexadecimal (16)</span>
+            <span id="hexa" class="bg-gray-700 p-2 rounded-lg text-white w-full">...</span>
+            <button class="text-green-400" onclick="copyToClipboard('hexa')">Copy</button>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="w-1/4">Base64 (64)</span>  
+            <span id="base64" class="bg-gray-700 p-2 rounded-lg text-white w-full">...</span>
+            <button class="text-green-400" onclick="copyToClipboard('base64')">Copy</button>
+          </div>
+          <div class="flex items-center gap-4">
+            <span>Custom:</span>
+            <input id="customInput" type="number" class="bg-gray-700 p-2 rounded-lg text-white w-16" value="30" min="2"
+              max="64">
+            <span id="custom" class="bg-gray-700 p-2 rounded-lg text-white w-full">...</span>
+            <button class="text-green-400" onclick="copyToClipboard('custom')">Copy</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const inputNumber = document.getElementById('input-number');
+    const inputBase = document.getElementById('input-base');
+    const customInput = document.getElementById('customInput');
+
+    inputNumber.addEventListener('input', convertBase);
+    inputBase.addEventListener('input', convertBase);
+    customInput.addEventListener('input', convertBase);
+
+    convertBase();
+
+    async function convertBase() {
+      const number = inputNumber.value;
+      const base = parseInt(inputBase.value);
+      const customBase = parseInt(customInput.value);
+
+      const bases = [2, 8, 10, 16, 64, customBase];
+
+      for (const targetBase of bases) {
+        const result = await fetchAPI(number, base, targetBase);
+        updateResult(targetBase, result);
+      }
+    }
+
+    async function fetchAPI(number, base, targetBase) {
+      const response = await fetch(`/api/integer-base-converter?number=${number}&base=${base}&targetBase=${targetBase}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      });
+      const data = await response.json();
+      return data.result;
+    }
+
+    function updateResult(base, result) {
+      switch (base) {
+        case 2: document.getElementById('bin').textContent = result; break;
+        case 8: document.getElementById('oct').textContent = result; break;
+        case 10: document.getElementById('dec').textContent = result; break;
+        case 16: document.getElementById('hexa').textContent = result; break;
+        case 64: document.getElementById('base64').textContent = result; break;
+        default: document.getElementById('custom').textContent = result; break;
+      }
+    }
+
+    function toggleTools(categoryId) {
+      const toolsList = document.getElementById(`tools-${categoryId}`);
+      toolsList.classList.toggle('hidden');
+    }
+
+    function validateInput() {
+    const number = document.getElementById('input-number').value;
+    const base = parseInt(document.getElementById('input-base').value);
+    const validChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".slice(0, base);
+    
+    if (base < 2 || base > 64) {
+      showError("Base must be between 2 and 64.");
+      return false;
+    }
+    // Kiểm tra số âm
+    if (number.startsWith('-')) {
+      showError("Negative numbers are not allowed.");
+      return false;
+    }
+
+    // Kiểm tra các ký tự không hợp lệ trong base hiện tại
+    for (let char of number.toUpperCase()) {
+      if (!validChars.includes(char)) {
+        showError(`Invalid digit "${char}" for base ${base}.`);
+        return false;
+      }
+    }
+
+    hideError();
+    return true;
+  }
+
+  function showError(message) {
+    const errorMsg = document.getElementById('error-msg');
+    errorMsg.textContent = message;
+    errorMsg.classList.remove('hidden');
+  }
+
+  function hideError() {
+    document.getElementById('error-msg').classList.add('hidden');
+  }
+
+  function copyToClipboard(id) {
+    const text = document.getElementById(id).textContent;
+    navigator.clipboard.writeText(text);
+  }
+
+  </script>
+</body>
+
+</html>
