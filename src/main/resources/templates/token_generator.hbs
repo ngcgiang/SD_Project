@@ -47,33 +47,34 @@
           <div class="flex items-center justify-between mb-4">
             <label class="flex items-center space-x-2">
               <span>Uppercase (ABC...)</span>
-              <input type="checkbox" class="toggle" checked>
+              <input id="upperCheck" type="checkbox" class="toggle" checked>
             </label>
             <label class="flex items-center space-x-2">
               <span>Lowercase (abc...)</span>
-              <input type="checkbox" class="toggle" checked>
+              <input id="lowerCheck" type="checkbox" class="toggle" checked>
             </label>
             <label class="flex items-center space-x-2">
               <span>Numbers (123...)</span>
-              <input type="checkbox" class="toggle" checked>
+              <input id="numberCheck" type="checkbox" class="toggle" checked>
             </label>
             <label class="flex items-center space-x-2">
               <span>Symbols (!-...)</span>
-              <input type="checkbox" class="toggle" checked>
+              <input id="symbolCheck" type="checkbox" class="toggle" checked>
             </label>
           </div>
 
           <div class="mb-4">
-            <label class="block text-sm mb-2">Length (172)</label>
-            <input type="range" min="1" max="200" value="172" class="w-full">
+            <label class="block text-sm mb-2" id="lengthLabel">Length (1)</label>
+            <input type="range" min="1" max="512" value="1" class="w-full" id="rangeInput">
           </div>
 
-          <textarea class="w-full bg-gray-700 p-3 rounded-lg text-white mb-4" rows="4" readonly>S/IgWkQm"OQjW:Dv:QlA||R@/opO2=yMD4{Da},bFJ3A#yfMcBPzX9Sa;EfkmWSTp06Y\ffhuHHr@[FYV,e*C;8/IP2iPz,CY-}}xA(u;*uCH:wjoq'exPYP:dd.FpHLD#"BcKlJ9Te2*RD-=Z:QQJc)a5YP}};Li5M9T'CKOw</textarea>
+          <textarea id="tokenResult" placeholder="The token..." class="w-full bg-gray-700 p-3 rounded-lg text-white mb-4" rows="4"></textarea>
 
           <div class="flex space-x-4">
-            <button class="bg-gray-700 px-4 py-2 rounded-lg text-white hover:bg-gray-600">Copy</button>
-            <button class="bg-gray-700 px-4 py-2 rounded-lg text-white hover:bg-gray-600">Refresh</button>
+            <button id="copy-token" onclick="copyToken('tokenResult')" class="bg-gray-700 px-4 py-2 rounded-lg text-white hover:bg-gray-600">Copy</button>
+            <button id="refresh" class="bg-gray-700 px-4 py-2 rounded-lg text-white hover:bg-gray-600">Refresh</button>
           </div>
+
         </div>
       </div>
 
@@ -81,6 +82,81 @@
   </div>
 </body>
 <script>
+  const rangeInput = document.getElementById('rangeInput');
+  const lengthLabel = document.getElementById('lengthLabel');
+  const uppercaseCheck = document.getElementById('upperCheck');
+  const lowercaseCheck = document.getElementById('lowerCheck');
+  const numberCheck = document.getElementById('numberCheck');
+  const symbolCheck = document.getElementById('symbolCheck');
+
+// Update length label
+  rangeInput.addEventListener('input', () => {
+    lengthLabel.textContent = `Length (${rangeInput.value})`;
+  });
+
+// Generate token
+  rangeInput.addEventListener('input', () => {
+    const length = rangeInput.value;
+    const includeUppercase = uppercaseCheck.checked;
+    const includeLowercase = lowercaseCheck.checked;
+    const includeNumbers = numberCheck.checked;
+    const includeSymbols = symbolCheck.checked;
+
+    document.querySelector('textarea').textContent = generateToken(length, includeUppercase, includeLowercase, includeNumbers, includeSymbols);
+  });
+
+  [uppercaseCheck, lowercaseCheck, numberCheck, symbolCheck].forEach(checkbox => { 
+    checkbox.addEventListener('change', () => {
+      const length = rangeInput.value;
+      const includeUppercase = uppercaseCheck.checked;
+      const includeLowercase = lowercaseCheck.checked;
+      const includeNumbers = numberCheck.checked;
+      const includeSymbols = symbolCheck.checked;
+      document.querySelector('textarea').textContent = generateToken(length, includeUppercase, includeLowercase, includeNumbers, includeSymbols);
+    });
+      const length = rangeInput.value;
+      const includeUppercase = uppercaseCheck.checked;
+      const includeLowercase = lowercaseCheck.checked;
+      const includeNumbers = numberCheck.checked;
+      const includeSymbols = symbolCheck.checked;
+      document.querySelector('textarea').textContent = generateToken(length, includeUppercase, includeLowercase, includeNumbers, includeSymbols);
+  });
+
+  document.getElementById('refresh').addEventListener('click', () => {
+    const length = rangeInput.value;
+    const includeUppercase = uppercaseCheck.checked;
+    const includeLowercase = lowercaseCheck.checked;
+    const includeNumbers = numberCheck.checked;
+    const includeSymbols = symbolCheck.checked;
+    document.querySelector('textarea').textContent = generateToken(length, includeUppercase, includeLowercase, includeNumbers, includeSymbols);
+  });
+
+  
+  async function generateToken(length,includeUppercase, includeLowercase, includeNumbers, includeSymbols) {
+      const response = await fetch('/api/token', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: new URLSearchParams({
+              length: length,
+              includeUppercase: includeUppercase,
+              includeLowercase: includeLowercase,
+              includeNumbers: includeNumbers,
+              includeSymbols: includeSymbols
+          })
+      });
+
+      const data = await response.json();
+      document.getElementById('tokenResult').textContent = data.token;
+  }
+
+  function copyToken(elementId) {
+    const textarea = document.getElementById(elementId);
+    
+    textarea.select();
+    document.execCommand('copy'); 
+  }
 
 
 </script>
