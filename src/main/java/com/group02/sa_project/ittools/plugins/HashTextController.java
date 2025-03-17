@@ -1,4 +1,4 @@
-package com.group02.sa_project.ittools.Controller.Crypto;
+package com.group02.sa_project.ittools.plugins;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;

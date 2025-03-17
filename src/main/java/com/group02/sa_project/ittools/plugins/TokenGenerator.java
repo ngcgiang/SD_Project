@@ -1,4 +1,4 @@
-package com.group02.sa_project.ittools.Controller.Crypto;
+package com.group02.sa_project.ittools.plugins;
 
 import java.security.SecureRandom;
 import java.util.HashMap;
@@ -18,7 +18,6 @@ import com.group02.sa_project.ittools.Service.CategoryService;
 import com.group02.sa_project.ittools.Service.ToolService;
 import org.springframework.web.bind.annotation.PostMapping;
 import java.util.Map;
-
 
 @Controller
 @RequestMapping("")
