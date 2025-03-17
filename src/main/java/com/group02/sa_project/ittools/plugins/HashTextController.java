@@ -1,5 +1,10 @@
 package com.group02.sa_project.ittools.plugins;
 
+import com.group02.sa_project.ittools.Service.CategoryService;
+import com.group02.sa_project.ittools.Model.Category;
+import com.group02.sa_project.ittools.Service.ToolService;
+import com.group02.sa_project.ittools.Model.Tool;
+
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.security.MessageDigest;
-
-import com.group02.sa_project.ittools.Service.CategoryService;
-import com.group02.sa_project.ittools.Model.Category;
-
-import com.group02.sa_project.ittools.Service.ToolService;
-import com.group02.sa_project.ittools.Model.Tool;
 
 @Controller
 @RequestMapping("")

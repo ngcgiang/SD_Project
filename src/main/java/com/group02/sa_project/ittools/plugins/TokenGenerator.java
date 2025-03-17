@@ -1,9 +1,13 @@
 package com.group02.sa_project.ittools.plugins;
 
+import com.group02.sa_project.ittools.Model.Category;
+import com.group02.sa_project.ittools.Model.Tool;
+import com.group02.sa_project.ittools.Service.CategoryService;
+import com.group02.sa_project.ittools.Service.ToolService;
+
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,11 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.group02.sa_project.ittools.Model.Category;
-import com.group02.sa_project.ittools.Model.Tool;
-import com.group02.sa_project.ittools.Service.CategoryService;
-import com.group02.sa_project.ittools.Service.ToolService;
 import org.springframework.web.bind.annotation.PostMapping;
 import java.util.Map;
 
